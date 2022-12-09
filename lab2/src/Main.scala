@@ -8,7 +8,7 @@ object Main {
     val factory = new LinkedListFactory
     val dot1 = new MyDot(1, 1)
     val list = factory.getBuilderByName(dot1.getClassName)
-    for (i <- 0 until 3000) {
+    for (i <- 0 until 100000) {
         list.add(new MyDot)
     }
     list.printForSort

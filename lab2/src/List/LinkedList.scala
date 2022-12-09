@@ -188,23 +188,45 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
     this.comparatorType = null
 
   }
+  def mergeSort(list: ListBuffer[V]):ListBuffer[V]= {
+      if(list.size <= 1){
+        return list
+      }else{
+        val sortedList = new ListBuffer[V]
+        var leftList = list.slice(0,list.size/2)
+        var rightList = list.slice(list.size/2,list.size)
 
-  def mergeSort(xs: List[V]):List[V] = {
-    val n = xs.length / 2
-    if (n == 0) xs
-    else {
-      def merge(xs: List[V], ys:List[V]): List[V] =
-        (xs, ys) match {
-          case (Nil, ys) => ys
-          case (xs, Nil) => xs
-          case (x :: xs1, y :: ys1) =>
-            if (x.getCompare > y.getCompare) x :: merge(xs1, ys)
-            else y :: merge(xs, ys1)
+        leftList = mergeSort(leftList)
+        rightList = mergeSort(rightList)
+
+        var i = 0
+        var j = 0
+        while ( {
+          i < leftList.size && j < rightList.size
+        }) {
+          if (leftList(i).getCompare <= rightList(j).getCompare) {
+            sortedList.addOne(leftList(i))
+            i += 1
+          }
+          else {
+            sortedList.addOne(rightList(j))
+            j += 1
+          }
         }
-
-      val (left, right) = xs splitAt (n)
-      merge(mergeSort(left), mergeSort(right))
-    }
+        while ( {
+          i < leftList.size
+        }) {
+          sortedList.addOne(leftList(i))
+          i += 1
+        }
+        while ( {
+          j < rightList.size
+        }) {
+          sortedList.addOne(rightList(j))
+          j += 1
+        }
+        sortedList
+      }
   }
 
   def sort: Unit ={
@@ -227,8 +249,7 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
         currNode = currNode.next
       }
     }
-    var vallist = list.toList
-    var sortList = mergeSort(vallist)
+    var sortList = mergeSort(list)
     this.clean
     for (item <- sortList) this.add(item)
   }
