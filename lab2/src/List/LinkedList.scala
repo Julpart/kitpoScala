@@ -9,6 +9,7 @@ class Node[V](var data: Option[V], var next: Node[V] , var prev: Node[V] ) {
 }
 
 class HeadNode[V](var data: Node[V], var next: HeadNode[V], var prev: HeadNode[V]) {
+   var size = 0;
 }
 
 
@@ -24,9 +25,11 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
   head.data.prev = head.data
   private var currHeadNode = head
   private var size = 0
+  private var n:Long = 0
   private var nodetype:IUserType = null
-  def getSize: Int = size
-
+  def getSize: Int = this.size
+  def getN: Long = this.n
+  def setN(n:Long): Unit = this.n = n
   import java.util.Comparator
 
   var comparatorType: Comparator[Option[IUserType]] = null
@@ -48,6 +51,7 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
     new_node.prev.next = new_node
     new_node.next.prev = new_node
     size += 1
+    currHeadNode.size += 1
     new_node
   }
 
@@ -124,6 +128,7 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
     node.prev = null
     node.data = null
     size -= 1
+    currHeadNode.size += 1
     true
   }
 
@@ -155,6 +160,21 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
 
   private def index(index: Int) = {
     if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size)
+    var ind = index
+    var headNode = head.next
+    var node = headNode.data.next
+    while(headNode.size <= ind){
+      ind = ind - headNode.size
+      headNode = headNode.next
+      node = headNode.data.next
+    }
+    for (i <- 0 until ind) {
+      node = node.next
+    }
+    node
+  }
+  private def indexOld(index: Int) = {
+    if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size)
     var headNode = head.next
     var node = headNode.data.next
     for (i <- 0 until index) {
@@ -166,11 +186,16 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
     }
     node
   }
-
   def get(id: Int): Option[V] = index(id).data
 
   def set(id: Int, data: V): Unit = {
     var node = index(id)
+    node.data = Option(data)
+
+  }
+
+  def setOld(id: Int, data: V): Unit = {
+    var node = indexOld(id)
     node.data = Option(data)
 
   }
@@ -374,4 +399,6 @@ class LinkedList[V <: IUserType](head: HeadNode[V] =  new HeadNode[V](new Node[V
     }
   }
   }
+
+
 }
