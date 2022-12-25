@@ -229,6 +229,30 @@ public class LinkedList<V extends IUserType> {
         return node;
     }
 
+    private Node<V> oldIndex(int index){
+        if (index < 0 || index >= size)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        HeadNode<V> headNode = head.next;
+        Node<V> node = headNode.data.next;
+
+        for (int i = 0; i < index; i++)   {
+            node = node.next;
+            if(node == headNode.data) {
+                headNode = headNode.next;
+                headNode = headNode.next;
+                node = headNode.data.next;
+            }
+        }
+        return node;
+    }
+
+    public V oldSet(int index, V data) {
+        Node<V> node = oldIndex(index);
+        V oldVal = node.data;
+        node.data = data;
+        return oldVal;
+    }
+
     public String printList() {
         HeadNode<V> head = this.head.next;
         Node<V> currNode = head.data.next;

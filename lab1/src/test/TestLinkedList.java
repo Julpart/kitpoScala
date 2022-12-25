@@ -174,45 +174,66 @@ public class TestLinkedList {
     }
 
     @Test
-    public void testSortEfficiency2() {
-        for (double i = 0.5; i <= 4000; i *= 2) {
-            int n = (int)(i * 1000);
-            System.out.print(n + ": ");
+    public void testSetEfficiency() {
+        for (int k = 1; k <= 6;k+=2) {
+            int size = k * 100000;
             var linkedList = factory.getBuilderByName(new MyDot().getClassName());
-            for (int j = 0; j < n; j++) linkedList.add(new MyDot());
-
-            long start = System.nanoTime();
-            linkedList.sort();
-            long end = System.nanoTime();
-            System.out.println((end - start) * 1.0 / 1000000);
-        }
-        for (double i = 0.5; i <= 4000; i *= 2) {
-            int n = (int)(i * 1000);
-            System.out.print(n + ": ");
-            var linkedList = factory.getBuilderByName(new MyDot().getClassName());
-            for (int j = 0; j < n; j++) linkedList.addInNewList(new MyDot());
-
-            long start = System.nanoTime();
-                linkedList.sort();
-            long end = System.nanoTime();
-            System.out.println((end - start) * 1.0 / 1000000);
-        }
-    }
-
-    @Test
-    public void testSortEfficiency3() {
-        for (double i = 0.5; i <= 4000; i *= 2) {
-            int n = (int)(i * 1000);
-            System.out.print(n + ": ");
-            var linkedList = factory.getBuilderByName(new MyDot().getClassName());
-            for (int j = 0; j < n; j++) linkedList.add(new MyDot());
+            for (int j = 0; j < size; j++) linkedList.add(new MyDot());
+            System.out.println("Размер списка: " + size);
             linkedList.balance();
-            long start = System.nanoTime();
-            linkedList.sort();
-            long end = System.nanoTime();
-            System.out.println((end - start) * 1.0 / 1000000);
-        }
-    }
+            for (double i = 0.5; i <= 512; i *= 2) {
+                int n = (int) (i * 1000);
+                System.out.println("Количество вставок: " + n);
+                long start = System.nanoTime();
+                for (int j = 0; j < n; j++) {
+                    linkedList.set(size/2,new MyDot());
+                }
+                long end = System.nanoTime();
+                System.out.println("Новая: " + (end - start) * 1.0 / 1000000);
 
+                long starto = System.nanoTime();
+                for (int j = 0; j < n; j++) {
+                    linkedList.oldSet(size/2,new MyDot());
+                }
+                long endo = System.nanoTime();
+                System.out.println("Старая: " + (endo - starto) * 1.0 / 1000000);
+            }
+
+
+
+
+        }
+
+    }
+    @Test
+    public void testSetEfficiency2() {
+        for (double k = 0.5; k <= 512;k*=2) {
+            int size =(int) (k * 1000);
+            var linkedList = factory.getBuilderByName(new MyDot().getClassName());
+            for (int j = 0; j < size; j++) linkedList.add(new MyDot());
+            System.out.println("Размер списка: " + size);
+            linkedList.balance();
+
+                long start = System.nanoTime();
+                for (int j = 0; j < 100000; j++) {
+                    linkedList.set(size/2,new MyDot());
+                }
+                long end = System.nanoTime();
+                System.out.println("Новая: " + (end - start) * 1.0 / 1000000);
+
+                long starto = System.nanoTime();
+                for (int j = 0; j < 100000; j++) {
+                    linkedList.oldSet(size/2,new MyDot());
+                }
+                long endo = System.nanoTime();
+                System.out.println("Старая: " + (endo - starto) * 1.0 / 1000000);
+
+
+
+
+
+        }
+
+    }
 
 }
